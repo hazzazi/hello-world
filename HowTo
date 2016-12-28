@@ -1,0 +1,17 @@
+## Implementation:
+step1: Django setup:
+First, since Django is based on Python, make sure that Python is installed in your server.
+Next install virtual environment. The idea behind that is to isolate your project, and all installed package from the rest of the system. This insures no conflict with installed package in your system and ease the task of changing some packages within your project. 
+Here are the steps:
+
+```js
+pip install virtualenv    //install virtualenv package
+mkdir myproject           // make new directory 
+cd my project             
+virtualenv . -p python2.7 // start new virtual environment that uses Python 2.7
+source bin/activate       // to activate this environment 
+```
+Now, you have new environment ready. Install latest pip, then Django.
+(myproject) ~$ pip install --upgrade pip
+(myproject) ~$ pip install django~=1.10.3  // or the latest
+(myproject)~$ django-admin.py startproject myproject
