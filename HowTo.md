@@ -1,5 +1,3 @@
-[![Version npm](https://img.shields.io/npm/v/ws.svg)](https://www.npmjs.com/package/ws)
-
 ## Implementation:
 step1: Django setup:
 First, since Django is based on Python, make sure that Python is installed in your server.
