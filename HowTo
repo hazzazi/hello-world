@@ -5,11 +5,18 @@ Next install virtual environment. The idea behind that is to isolate your projec
 Here are the steps:
 
 ```js
-pip install virtualenv    //install virtualenv package
-mkdir myproject           // make new directory 
-cd my project             
-virtualenv . -p python2.7 // start new virtual environment that uses Python 2.7
-source bin/activate       // to activate this environment 
+var WebSocket = require('ws');
+var ws = new WebSocket('ws://www.host.com/path');
+
+ws.on('open', function open() {
+  var array = new Float32Array(5);
+
+  for (var i = 0; i < array.length; ++i) {
+    array[i] = i / 2;
+  }
+
+  ws.send(array, { binary: true, mask: true });
+});
 ```
 Now, you have new environment ready. Install latest pip, then Django.
 (myproject) ~$ pip install --upgrade pip
