@@ -4,7 +4,7 @@ First, since Django is based on Python, make sure that Python is installed in yo
 Next install virtual environment. The idea behind that is to isolate your project, and all installed package from the rest of the system. This insures no conflict with installed package in your system and ease the task of changing some packages within your project. 
 Here are the steps:
 
-```py
+```js
 var WebSocket = require('ws');
 var ws = new WebSocket('ws://www.host.com/path');
 
