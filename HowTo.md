@@ -95,13 +95,13 @@ myproject/
         wsgi.py
         __init__.py
 ```
-* The first *myproject/* is the root directory, a container for your project.
-* *manage.py:* A command-line utility that lets you interact with this Django project in various ways. For example, you can run a server by typing *manage.py runserver*.
+* The first `myproject/` is the root directory, a container for your project.
+* `manage.py:` A command-line utility that lets you interact with this Django project in various ways. For example, you can run a server by typing `manage.py runserver`.
 * The inner *myproject/*: contains the basic files of the project, here you can configure the global settings, define URLs, etc.
 * At the *settings.py*: here we add a reference to any new app, middleware, a reference to the used DB and other things.
-* *wsgi.py*: An entry-point for WSGI-compatible web servers to serve your project. For example, Django is shipped with light weight server, if instead, you need to use an alternative, then you need to specify the configuration in this file.
+* `wsgi.py`: An entry-point for WSGI-compatible web servers to serve your project. For example, Django is shipped with light weight server, if instead, you need to use an alternative, then you need to specify the configuration in this file.
 
-Django should work now !, change the directory to the outer *myproject*, then run: 
+Django should work now !, change the directory to the outer `myproject`, then run: 
 ```
 $ python manage.py runserver
 ```
@@ -139,11 +139,11 @@ myproject/
         wsgi.py
         __init__.py
 ```
-before we start working on this App, register the App in *myproject/settings.py* under INSTALLED_APPS. 
-Notice the files inside the *sensorReading* App directory, we will focus on the main three files, which represents main blocks on Django: Views, Models, Admin.
+before we start working on this App, register the App in `myproject/settings.py` under INSTALLED_APPS. 
+Notice the files inside the `sensorReading` App directory, we will focus on the main three files, which represents main blocks on Django: Views, Models, Admin.
 
 #### Django View:
-In *view.py*, we define the logic of interaction with the user. It specifies how we are handling new request, and returning a response by rendering web page. views are Python functions. Starting by simple example, in *sensorReading/view.py* 
+In `view.py`, we define the logic of interaction with the user. It specifies how we are handling new request, and returning a response by rendering web page. views are Python functions. Starting by simple example, in `sensorReading/view.py` 
 ```py
 from django.http import HttpResponse
 
@@ -154,9 +154,9 @@ def index(request):
 #### Django URLs:
 To make it work, we need to map it to a URL.
 To have the project well-organized, we will seperate our configurations of URLs in two files.
-* the first one: the main *url.py* file which is located already at */myproject/myproject/urls.py*
-* the second file: will have same file name, but isolated inside our App: *sensorReading*. This file does not exist,  so create new file */myproject/sensorReading/urls.py*.
-The purpose of having two files is to keep our project as an independant blocks, if we delete our new App, nothing will be affected. Or if we add new App, we just need to reference its urls in the main */myproject/myproject/urls.py* file. This will be clear when we edit the two files now.
+* the first one: the main `url.py` file which is located already at `/myproject/myproject/urls.py`
+* the second file: will have same file name, but isolated inside our App: `sensorReading`. This file does not exist,  so create new file `/myproject/sensorReading/urls.py`.
+The purpose of having two files is to keep our project as an independant blocks, if we delete our new App, nothing will be affected. Or if we add new App, we just need to reference its urls in the main `/myproject/myproject/urls.py` file. This will be clear when we edit the two files now.
 First edit the main */myproject/myproject/urls.py* as follows: 
 
 ```py
@@ -179,4 +179,4 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 ]
 ```
-couple of things to notice here: from . means from the same directory. "r'^$'" look for empty string. views.index: redirect any request to index function inside the view.py file
+couple of things to notice here: from . means from the same directory. `r'^$'` look for empty string. `views.index`: redirect any request to index function inside the `view.py` file
