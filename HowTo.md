@@ -1,12 +1,6 @@
 ##Goal: 
 create simple wireless sensor network
 
-* Get the Django webserver started. Just enough to see some kind of Django sample page when you access the server from your web browser.
-* Learn how to edit the models.py so that you can "render" (show in the browser) whatever view you want.
-* Make the VIEW mentioned above have a link to another url (still on your web server). This will trigger a request to your server for a different url. This url will be handled by a different method in your models.py, which in turn will render some other view. For now, imagine this other view displaying "Yes, youve lit the LED" or "LED lighting completed". The new method needed to render this view will be where you hook your code into for running your script.
-* Instead of running the script, just print something to the console to ensure that your "hook" is working. print "***** SOON ILL REPLACE THIS WITH WHATEVER IS NEEDED TO RUN MY SCRIPT ****" and look for that in the console
-* Then learn how to execute python from Django, and drop it in there.
-
 ##Keywords: 
 GET, POST, AJAX, JS, XML, JSON, Django channels, Websocket, Node.js
 
