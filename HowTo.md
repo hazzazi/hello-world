@@ -62,7 +62,7 @@ This article tries to explain one way to build a simple wireless sensor network.
 The sensor (client) sends the data to the server using Websocket protocol. The server uses Django channels; an extension to Django framework which adds a new layer to support Websocket handling. After receiving the data at the server side, Django and some Javascript packages will take care of web development part.
 
 ## Implementation:
-step1: Django setup:
+###step1: Django setup:
 First, since Django is based on Python, make sure that Python is installed in your server.
 Next install virtual environment. The idea behind that is to isolate your project, and all installed package from the rest of the system. This insures no conflict with installed package in your system and ease the task of changing some packages within your project. 
 Here are the steps:
@@ -85,5 +85,5 @@ Now, you have new environment ready. Install latest pip, then Django.
 ```
 (myproject) ~$ pip install --upgrade pip
 (myproject) ~$ pip install django~=1.10.3  // or the latest
-(myproject)~$ django-admin.py startproject myproject
+(myproject) ~$ django-admin.py startproject myproject
 ```
