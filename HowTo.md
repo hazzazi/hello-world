@@ -173,6 +173,41 @@ Now, if you browser to: `http://127.0.0.1:8000` , you should see: "Hello, world.
 #### Django Admin:
 
 #### Working with HTML and templates:
+Now to make things more practical and reliable, instead of rendering things directly in `views.py`, we will edit this file such that we redirect things to templates directory where all our html files should reside.
 
+For that, create new folder called template, inside it create another folder with the App name, and through all the html files there (for now create new file `index.html`). Having this order will make things convient and reliable in your project as you'll notice later.
+The project directory will look like this:
+```
+myproject/
+├───manage.py
+├───sensorReading/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+└───myproject/
+        settings.py
+        urls.py
+        wsgi.py
+        __init__.py
+├───templates/
+         sensorReading/
+                index.html
+```
+move what you write in `view.py` to `index.html`:
+```html
+<html>
+    <p>Hello, world. You're at the sensorReading index</p>
+</html>
+```
+and we need to change the code in `views.py` a bit:
+```py
+from django.shortcuts import render
 
-
+def index(request):
+    return render(request, 'sensorReading/index.html', {})
+```
