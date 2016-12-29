@@ -7,9 +7,6 @@ create simple wireless sensor network
 * Instead of running the script, just print something to the console to ensure that your "hook" is working. print "***** SOON ILL REPLACE THIS WITH WHATEVER IS NEEDED TO RUN MY SCRIPT ****" and look for that in the console
 * Then learn how to execute python from Django, and drop it in there.
 
-##Tools: 
-Raspberry Pi, django, AJAX, JSON
-
 ##Keywords: 
 GET, POST, AJAX, JS, XML, JSON, Django channels, Websocket, Node.js
 
@@ -142,3 +139,44 @@ myproject/
         wsgi.py
         __init__.py
 ```
+before we start working on this App, register the App in *myproject/settings.py* under INSTALLED_APPS. 
+Notice the files inside the *sensorReading* App directory, we will focus on the main three files, which represents main blocks on Django: Views, Models, Admin.
+
+#### Django View:
+In *view.py*, we define the logic of interaction with the user. It specifies how we are handling new request, and returning a response by rendering web page. views are Python functions. Starting by simple example, in *sensorReading/view.py* 
+```py
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the sensorReading index.")
+```
+
+#### Django URLs:
+To make it work, we need to map it to a URL.
+To have the project well-organized, we will seperate our configurations of URLs in two files.
+* the first one: the main *url.py* file which is located already at */myproject/myproject/urls.py*
+* the second file: will have same file name, but isolated inside our App: *sensorReading*. This file does not exist,  so create new file */myproject/sensorReading/urls.py*.
+The purpose of having two files is to keep our project as an independant blocks, if we delete our new App, nothing will be affected. Or if we add new App, we just need to reference its urls in the main */myproject/myproject/urls.py* file. This will be clear when we edit the two files now.
+First edit the main */myproject/myproject/urls.py* as follows: 
+
+```py
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'', include('sensorReading.urls')),
+]
+```
+inside the urlpattern, the two line codes are written in *regular expression* syntax, please read about for more details. The main idea here is `r` means this a regular expression `^` means start with, i.e. when you encounter a link that has *'http://127.0.0.1:8000/admin/*, then redirect it to admin.site.urls. Likewise, in the second line, we have `r''`, redirect everything that comes into 'http://127.0.0.1:8000/' to sensorReading.urls and look for further instructions there, notice we have an empty argument after 8000/, unlike with admin because we are having empty string: `r''`.
+
+Now, edit */myproject/sensorReading/urls.py* as follows:
+```py
+from django.conf.urls import url
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+]
+```
+couple of things to notice here: from . means from the same directory. "r'^$'" look for empty string. views.index: redirect any request to index function inside the view.py file
