@@ -62,7 +62,8 @@ This article tries to explain one way to build a simple wireless sensor network.
 The sensor (client) sends the data to the server using Websocket protocol. The server uses Django channels; an extension to Django framework which adds a new layer to support Websocket handling. After receiving the data at the server side, Django and some Javascript packages will take care of web development part.
 
 ## Implementation:
-###step1: Django setup:
+### (1): Django
+#### Basic Django setup:
 First, since Django is based on Python, make sure that Python is installed in your server.
 Next install virtual environment. The idea behind that is to isolate your project, and all installed package from the rest of the system. This insures no conflict with installed package in your system and ease the task of changing some packages within your project. 
 Here are the steps:
@@ -100,6 +101,7 @@ myproject/
 * The first *myproject/* is the root directory, a container for your project.
 * *manage.py:* A command-line utility that lets you interact with this Django project in various ways. For example, you can run a server by typing *manage.py runserver*.
 * The inner *myproject/*: contains the basic files of the project, here you can configure the global settings, define URLs, etc.
+* At the *settings.py*: here we add a reference to any new app, middleware, a reference to the used DB and other things.
 * *wsgi.py*: An entry-point for WSGI-compatible web servers to serve your project. For example, Django is shipped with light weight server, if instead, you need to use an alternative, then you need to specify the configuration in this file.
 
 Django should work now !, change the directory to the outer *myproject*, then run: 
@@ -110,5 +112,33 @@ You just run the server locally at http://127.0.0.1:8000/, check if it works by 
 ```
 ALLOWED_HOSTS = ['127.0.0.1']
 ```
+#### Creating a new App:
+```
+Projects vs. apps [https://docs.djangoproject.com/en/1.10/intro/tutorial01/]
 
-        
+What’s the difference between a project and an app? An app is a Web application that does something – e.g., a Weblog system, a database of public records or a simple poll app. A project is a collection of configuration and apps for a particular website. A project can contain multiple apps. An app can be in multiple projects.
+```
+Now, we had the Django ready, we'll start a new App that is specific to our purpose: responsible of handling the task of reading data from a sensor at the client side. This App will take care of the communication between the client and server as well as recieving and parsing data.
+To start a new App, at the same directory as manage.py and type:
+```
+$ python manage.py startapp sensorReading
+```
+This will create a new directory called sensorReading, the structure of the project will look like this now:
+```
+myproject/
+├───manage.py
+├───sensorReading/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+└───myproject/
+        settings.py
+        urls.py
+        wsgi.py
+        __init__.py
+```
