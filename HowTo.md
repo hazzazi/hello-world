@@ -1,4 +1,4 @@
-Goal: create simple wireless sensor network
+#Goal:# create simple wireless sensor network
 
 * Get the Django webserver started. Just enough to see some kind of Django sample page when you access the server from your web browser.
 * Learn how to edit the models.py so that you can "render" (show in the browser) whatever view you want.
