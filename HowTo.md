@@ -1,4 +1,5 @@
-#Goal:# create simple wireless sensor network
+##Goal: 
+create simple wireless sensor network
 
 * Get the Django webserver started. Just enough to see some kind of Django sample page when you access the server from your web browser.
 * Learn how to edit the models.py so that you can "render" (show in the browser) whatever view you want.
@@ -6,15 +7,17 @@
 * Instead of running the script, just print something to the console to ensure that your "hook" is working. print "***** SOON ILL REPLACE THIS WITH WHATEVER IS NEEDED TO RUN MY SCRIPT ****" and look for that in the console
 * Then learn how to execute python from Django, and drop it in there.
 
-#Tools: Raspberry Pi, django, AJAX, JSON
+##Tools: 
+Raspberry Pi, django, AJAX, JSON
 
-#Keywords: GET, POST, AJAX, JS, XML, JSON, Django channels, Websocket, Node.js
+##Keywords: 
+GET, POST, AJAX, JS, XML, JSON, Django channels, Websocket, Node.js
 
-#Questions:
+##Questions:
 Can I use the light weight server that comes with django and access it remotely ?Start by breaking down the problem into smaller goals
 
 ##System components:
-#(a) Server side.
+###(a) Server side.
 1. Django: 
         - offers a complete web framework. Takes care of user authentication, content administration, site maps, RSS feeds ..etc.
         - provides both, admin and public interface.
@@ -50,8 +53,8 @@ Can I use the light weight server that comes with django and access it remotely 
         - Built based on JS and JQuery. 
 
 
-#(b) Client side.
-#(c) connections.
+###(b) Client side.
+###(c) connections.
 
 ##Big Picture:
 This article tries to explain one way to build a simple wireless sensor network. At the end of this tutorial, you should be able to send data from multiple sensors to a server, then show these acquired data in a nice dashboard displayed in a public web page.
