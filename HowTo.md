@@ -81,9 +81,34 @@ ws.on('open', function open() {
   ws.send(array, { binary: true, mask: true });
 });
 ```
-Now, you have new environment ready. Install latest pip, then Django.
+Now, you have new environment ready. Install latest pip, Django, and start new Django project.
 ```
 (myproject) ~$ pip install --upgrade pip
 (myproject) ~$ pip install django~=1.10.3  // or the latest
 (myproject) ~$ django-admin.py startproject myproject
 ```
+After starting the new project: myproject, the directory structure will look like:
+```
+myproject/
+├───manage.py
+└───myproject/
+        settings.py
+        urls.py
+        wsgi.py
+        __init__.py
+```
+* The first *myproject/* is the root directory, a container for your project.
+* *manage.py:* A command-line utility that lets you interact with this Django project in various ways. For example, you can run a server by typing *manage.py runserver*.
+* The inner *myproject/*: contains the basic files of the project, here you can configure the global settings, define URLs, etc.
+* *wsgi.py*: An entry-point for WSGI-compatible web servers to serve your project. For example, Django is shipped with light weight server, if instead, you need to use an alternative, then you need to specify the configuration in this file.
+
+Django should work now !, change the directory to the outer *myproject*, then run: 
+```
+$ python manage.py runserver
+```
+You just run the server locally at http://127.0.0.1:8000/, check if it works by typing this IP address in your browser. If it didn't work, then you may need to add '127.0.0.1' to your allowed hosts at the setting file. i.e. at myproject/settings.py add:
+```
+ALLOWED_HOSTS = ['127.0.0.1']
+```
+
+        
