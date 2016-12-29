@@ -162,9 +162,9 @@ urlpatterns = [
     url(r'', include('sensorReading.urls')),
 ]
 ```
-inside the urlpattern, the two line codes are written in *regular expression* syntax, please read about for more details. The main idea here is `r` means this a regular expression `^` means start with, i.e. when you encounter a link that has *'http://127.0.0.1:8000/admin/*, then redirect it to admin.site.urls. Likewise, in the second line, we have `r''`, redirect everything that comes into 'http://127.0.0.1:8000/' to sensorReading.urls and look for further instructions there, notice we have an empty argument after 8000/, unlike with admin because we are having empty string: `r''`.
+inside the urlpattern, the two line codes are written in *regular expression* syntax, please read about for more details. The main idea here is `r` means this a regular expression `^` means start with, i.e. when you encounter a link that has *http://127.0.0.1:8000/admin/*, then redirect it to admin.site.urls. Likewise, in the second line, we have `r''`, redirect everything that comes into *http://127.0.0.1:8000/* to sensorReading.urls and look for further instructions there, notice we have an empty argument after 8000/, unlike with admin because we are having empty string: `r''`.
 
-Now, edit */myproject/sensorReading/urls.py* as follows:
+Now, edit `/myproject/sensorReading/urls.py` as follows:
 ```py
 from django.conf.urls import url
 from . import views
@@ -173,4 +173,13 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 ]
 ```
-couple of things to notice here: from . means from the same directory. `r'^$'` look for empty string. `views.index`: redirect any request to index function inside the `view.py` file
+couple of things to notice here: from . means from the same directory. `r'^$'` look for empty string. `views.index`: redirect any request to index function inside the `view.py` file. 
+Now, if you browser to: `http://127.0.0.1:8000` , you should see: "Hello, world. You're at the sensorReading index." 
+
+#### Django Models:
+#### Django Admin:
+
+#### Working with HTML and templates:
+
+
+
