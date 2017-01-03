@@ -175,7 +175,7 @@ Now, if you browser to: `http://127.0.0.1:8000` , you should see: "Hello, world.
 #### Working with HTML and templates:
 Now to make things more practical and reliable, instead of rendering things directly in `views.py`, we will edit this file such that we redirect things to templates directory where all our html files should reside.
 
-For that, create new folder called template, inside it create another folder with the App name, and through all the html files there (for now create new file `index.html`). Having this order will make things convient and reliable in your project as you'll notice later.
+For that, create new folder called template, inside it create another folder with the App name, and throw all the html files there (for now create a new file `index.html`). Having this order will make things convient and reliable in your project as you'll notice later.
 The project directory will look like this:
 ```
 myproject/
@@ -204,10 +204,33 @@ move what you write in `view.py` to `index.html`:
     <p>Hello, world. You're at the sensorReading index</p>
 </html>
 ```
-and we need to change the code in `views.py` a bit:
+we also need to change the code in `views.py` a bit:
 ```py
 from django.shortcuts import render
 
 def index(request):
     return render(request, 'sensorReading/index.html', {})
 ```
+if you now browse to `http://127.0.0.1:8000`, you should get same message as before: `"Hello, world. You're at the sensorReading index."`.
+
+
+### (2): Django-Channels
+#### Why Django-Channels?
+Django is based on the classic concept of Http request/reponse. Our application here requires real-time server that can handle data streamed from various sensors. To meet this requirement, one can use AJAX or other technologies. Channels is based on Websocket; which is a communicaion protocol, providing full-duplex communication channels over a single TCP connection. It suits well for real-time applications allowing for messages to be passed back and forth while keeping the connection open.
+
+Without channels, django handles request/response as illustrated below:
+![alt text](/path/img.jpg)
+
+When introducing channels, the architecture looks as:
+![alt text](/path/img.jpg)
+
+For more information, please refer to the references.
+
+#### Channel setup
+In your same environment, first install channels:
+```
+$ pip install channels
+```
+then add 'channels' to the INSTALLED_APPS in the project setting file.
+
+
