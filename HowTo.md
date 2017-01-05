@@ -227,10 +227,28 @@ When introducing channels, the architecture looks as:
 For more information, please refer to the references.
 
 #### Channel setup
-In your same environment, first install channels:
+1. In your same environment, first install channels:
 ```
 $ pip install channels
 ```
 then add 'channels' to the INSTALLED_APPS in the project setting file.
 
+2. Next, we need to setup a channel layer. 
+```
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+        "ROUTING": "sensorReading.routing.channel_routing",
+    },
+}
+```
+3. Channel routing.
+Notice that in the settings file, in our channel layer settings, we specified channel routing "ROUTING" to follow a mapping defined in file called routing.py within our App: sensorReading. Thus let's create a new file with that name inside our App (i.e. routing.py). In that file add the following:
+```
+channel_routing = {
+}
+```
 
