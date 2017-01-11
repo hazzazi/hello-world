@@ -31,6 +31,7 @@ Can I use the light weight server that comes with django and access it remotely 
         References: 
         - https://blog.heroku.com/in_deep_with_django_channels_the_future_of_real_time_apps_in_django
         - http://channels.readthedocs.io/en/latest/
+        - https://medium.com/@johngrant/raspberry-pi-and-django-channels-8d5cddb36226#.dgg0nosw2
         
 
 3. Bootstrap
@@ -252,7 +253,7 @@ CHANNEL_LAYERS = {
 ```
 
 3. Channel routing
-Notice that in the settings file, in our channel layer settings, we specified channel routing "ROUTING" to follow a mapping defined in file called routing.py within our App: sensorReading. Thus let's create a new file with that name inside our App (i.e. routing.py). In that file add the following:
+Notice that in the settings file, in our channel layer settings, we specified channel routing "ROUTING" to follow a mapping defined in file called routing.py within our App: sensorReading. Thus let's create a new file with that name inside our App (i.e. `routing.py`). In that file add the following:
 ```
 channel_routing = {
 }
@@ -261,7 +262,7 @@ Now, it is empty, but we will connect it to Websocket later on.
 
 4. Run interface servers
 interface servers are the processes that do the work of taking incoming requests and loading them into the channels system. WSGI does not support WebSockets, long-poll HTTP requests and other Channels features, for that we need to run a standard like ASGI interface server. Django channels is shipped with an interface server called Daphne. To run Daphne, it just needs to be supplied with a channel backend.
-Define the new handler that overwrites the built-in WSGI-based request handler. For that, initiate a new file `asgi.py`:
+Define the new handler that overrides the built-in WSGI-based request handler. For that, initiate a new file `asgi.py`:
 ```
 import os
 import channels.asgi
@@ -270,4 +271,39 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
 channel_layer = channels.asgi.get_channel_layer()
 ```
 
-5. Channel routing and consumers
+5. Channel consumers
+Next, create a new file in the App folder: `/sensorReading/consumers.py`, here we will write functions to handle WebSockets events. These functions will override the built-in handling.
+Channels maps WebSocket connections to three channels:
+1. When a client connects for the first time, a message is sent to `websocket.connect`.
+2. through the session, all messages sent by the client will go through `websocket.receive` channel.
+3. A message is sent to `websocket.disconnect`, when the client disconnect.
+
+Here is how to write that as functions:
+```
+from channels import Group
+
+def ws_connect(message):
+        print("Adding new user to sensor group")
+        Group(“myproject").add(message.reply_channel)                           # Adds user to group for broadcast
+        message.reply_channel.send({                                            # Reply to individual directly
+        "text": "You're connected to myproject group :) ",
+
+def ws_message(message):
+    print("Received message is:" + message['text'])
+   
+def ws_disconnect(message):
+    Group("sensor").discard(message.reply_channel)
+
+```
+Notice in the code above, we use `Group`, Group allows for message broadcasting. so anyone connected to "myproject group", can receive WebSocket data from a client.
+
+One last step we need to configure in order to have things set is to go back to the routhing section in `routing.py`, and map channel events to our “consumer” functions:
+```
+from sensorReading.consumers import ws_message, ws_connect, ws_disconnect
+
+channel_routing = {
+    'websocket.connect': ws_connect,
+    'websocket.receive': ws_message,
+    'websocket.disconnect': ws_disconnect,
+}
+```
