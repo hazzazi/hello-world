@@ -237,10 +237,10 @@ then add 'channels' to the INSTALLED_APPS in the project setting file.
 2. Next, we need to setup a channel layer
 Previously, we were using in-memory channel layer implementation as our default channel layer. This just stores all the channel data in a dict in memory. Django runs everthing in one process along with WSGI server. Channels, on the other hand makes Django able to run on multi-processes. In other words, now, we are running one or more interface servers, and one or more worker servers, connected by a channel layer. For example, we can have different “interface servers”, and each one will service a different type of request - one might do both WebSocket and HTTP requests, while another might act as an SMS message gateway. To achieve that, we need to use a channel layer that supports cross-process. The recommended option by Channels is to use: Redis backend. So first, install it:
 ```
-pip install asgi_redis
+$ pip install asgi_redis
 ```
 then in the setting file, tell Django to use it:
-```
+```py
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgi_redis.RedisChannelLayer",
@@ -254,7 +254,7 @@ CHANNEL_LAYERS = {
 
 3. Channel routing
 Notice that in the settings file, in our channel layer settings, we specified channel routing "ROUTING" to follow a mapping defined in file called routing.py within our App: sensorReading. Thus let's create a new file with that name inside our App (i.e. `routing.py`). In that file add the following:
-```
+```py
 channel_routing = {
 }
 ```
@@ -263,7 +263,7 @@ Now, it is empty, but we will connect it to Websocket later on.
 4. Run interface servers
 interface servers are the processes that do the work of taking incoming requests and loading them into the channels system. WSGI does not support WebSockets, long-poll HTTP requests and other Channels features, for that we need to run a standard like ASGI interface server. Django channels is shipped with an interface server called Daphne. To run Daphne, it just needs to be supplied with a channel backend.
 Define the new handler that overrides the built-in WSGI-based request handler. For that, initiate a new file `asgi.py`:
-```
+```py
 import os
 import channels.asgi
 
@@ -279,7 +279,7 @@ Channels maps WebSocket connections to three channels:
 3. A message is sent to `websocket.disconnect`, when the client disconnect.
 
 Here is how to write that as functions:
-```
+```py
 from channels import Group
 
 def ws_connect(message):
@@ -298,7 +298,7 @@ def ws_disconnect(message):
 Notice in the code above, we use `Group`, Group allows for message broadcasting. so anyone connected to "myproject group", can receive WebSocket data from a client.
 
 One last step we need to configure in order to have things set is to go back to the routhing section in `routing.py`, and map channel events to our “consumer” functions:
-```
+```py
 from sensorReading.consumers import ws_message, ws_connect, ws_disconnect
 
 channel_routing = {
