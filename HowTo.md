@@ -9,7 +9,8 @@ Can I use the light weight server that comes with django and access it remotely 
 
 ##System components:
 ###(a) Server side.
-1. Django: 
+
+1. Django
         - offers a complete web framework. Takes care of user authentication, content administration, site maps, RSS feeds ..etc.
         - provides both, admin and public interface.
         - built-in sqlite DB, and can easily connect to other DB’s.
@@ -307,3 +308,13 @@ channel_routing = {
     'websocket.disconnect': ws_disconnect,
 }
 ```
+
+#### Handling real-time data
+After having the channel layer ready, the next step is to configure some files to handle the real-time data sent by clients, by preparing the following:
+
+1. Add a new directory: `/myproject/static/`, then create `/myproject/static/sensorReading`. Here we should place our static files.
+2. In the `settings.py` file add this new line:
+```
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, ‘static’),)
+```
+3. 
