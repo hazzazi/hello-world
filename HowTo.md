@@ -224,7 +224,7 @@ Without channels, django handles request/response as illustrated below:
 When introducing channels, the architecture looks as:
 ![alt text](/path/img.jpg)
 
-For more information, please refer to the references.
+proFor more information, please refer to the references.
 
 #### Channel setup
 1. In your same environment, first install channels:
@@ -233,7 +233,12 @@ $ pip install channels
 ```
 then add 'channels' to the INSTALLED_APPS in the project setting file.
 
-2. Next, we need to setup a channel layer. 
+2. Next, we need to setup a channel layer
+Previously, we were using in-memory channel layer implementation as our default channel layer. This just stores all the channel data in a dict in memory. Django runs everthing in one process along with WSGI server. Channels, on the other hand makes Django able to run on multi-processes. In other words, now, we are running one or more interface servers, and one or more worker servers, connected by a channel layer. For example, we can have different “interface servers”, and each one will service a different type of request - one might do both WebSocket and HTTP requests, while another might act as an SMS message gateway. To achieve that, we need to use a channel layer that supports cross-process. The recommended option by Channels is to use: Redis backend. So first, install it:
+```
+pip install asgi_redis
+```
+then in the setting file, tell Django to use it:
 ```
 CHANNEL_LAYERS = {
     "default": {
@@ -245,10 +250,24 @@ CHANNEL_LAYERS = {
     },
 }
 ```
-3. Channel routing.
+
+3. Channel routing
 Notice that in the settings file, in our channel layer settings, we specified channel routing "ROUTING" to follow a mapping defined in file called routing.py within our App: sensorReading. Thus let's create a new file with that name inside our App (i.e. routing.py). In that file add the following:
 ```
 channel_routing = {
 }
 ```
+Now, it is empty, but we will connect it to Websocket later on.
 
+4. Run interface servers
+interface servers are the processes that do the work of taking incoming requests and loading them into the channels system. WSGI does not support WebSockets, long-poll HTTP requests and other Channels features, for that we need to run a standard like ASGI interface server. Django channels is shipped with an interface server called Daphne. To run Daphne, it just needs to be supplied with a channel backend.
+Define the new handler that overwrites the built-in WSGI-based request handler. For that, initiate a new file `asgi.py`:
+```
+import os
+import channels.asgi
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
+channel_layer = channels.asgi.get_channel_layer()
+```
+
+5. Channel routing and consumers
