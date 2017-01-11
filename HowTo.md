@@ -282,16 +282,20 @@ Channels maps WebSocket connections to three channels:
 Here is how to write that as functions:
 ```py
 from channels import Group
+from channels.sessions import channel_session
 
+@channel_session
 def ws_connect(message):
         print("Adding new user to sensor group")
         Group(“myproject").add(message.reply_channel)                           # Adds user to group for broadcast
         message.reply_channel.send({                                            # Reply to individual directly
         "text": "You're connected to myproject group :) ",
 
+@channel_session
 def ws_message(message):
     print("Received message is:" + message['text'])
    
+@channel_session
 def ws_disconnect(message):
     Group("sensor").discard(message.reply_channel)
 
@@ -314,7 +318,57 @@ After having the channel layer ready, the next step is to configure some files t
 
 1. Add a new directory: `/myproject/static/`, then create `/myproject/static/sensorReading`. Here we should place our static files.
 2. In the `settings.py` file add this new line:
-```
+```py
 STATICFILES_DIRS = ( os.path.join(BASE_DIR, ‘static’),)
 ```
-3. 
+3. In `/myproject/static/sensorReading`, create new Javascript, call it for example: `sensor.js`. This contains the code that handle WebSockets dynamically in the backend.
+```js
+$(function() {
+    // ? : (Conditional ) means: If Condition is true? Then value X : Otherwise value Y
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    var sensorSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/myproject/");
+
+    sensorSocket.onopen = function() {
+           console.log("Connected!");             // just for debugging
+           $('#myproject').text("Connected!");
+           sensorSocket.send("Connected!");
+    };
+
+    sensorSocket.onmessage = function(message) {
+        console.log("Received Socket message!");  // just for debugging
+        console.log(message);                     // just for debugging
+        $('#myproject').text(message.data);
+    };
+
+});
+```
+Here, we are initiating a new WebSocket object, with a specified address. This will offer us an access to number of object's events. We used onopen: which defines what happened when socket connection is established. and onmessage: This event occurs when client receives data from server. Both function receives data from client "message". To read it check: message.data.
+Notice that we are sending received data with `myproject` as an id.
+
+4. To have received data displayed, we need to modify our `index.html` file:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}SensorReading Demo{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    {% load staticfiles%}
+    <div class="container">
+          <div id="sensor">SensorReading Demo</div>            
+    </div>
+  <script type="text/javascript" src='{% static "sensorReading/jquery-1.12.1.min.js" %}'></script> 
+  <script type="text/javascript" src='{% static "sensorReading/reconnecting-websocket.min.js" %}'></script>
+  <script type="text/javascript" src='{% static "sensorReading/sensor.js" %}'></script>
+</body>
+</html>
+```
+The static javascript files are added in the static directory. jquery-1.12.1.min.js is the jQuery library and reconnecting-websocket.min.js is a library that automatically reconnects the WebSocket if connection is dropped. 
+
+Data is received by stating the id: `myproject`, which we set in our sensor.js file. i.e. here:
+``` html
+  <div id="sensor">SensorReading Demo</div> 
+```
+Now, if you open the browser to http://127.0.0.1:8000/, you should see the data stream.
