@@ -373,4 +373,4 @@ Data is received by stating the id: `myproject`, which we set in our sensor.js f
 ``` html
   <div id="sensor">SensorReading Demo</div> 
 ```
-Now, if you open the browser to http://127.0.0.1:8000/, you should see the data stream.
+Now, if your client is up and it's sending data (which we haven't explained yet), you should see the data stream if you open the browser to http://127.0.0.1:8000/.
