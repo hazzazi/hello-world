@@ -35,10 +35,14 @@ Can I use the light weight server that comes with django and access it remotely 
         - https://medium.com/@johngrant/raspberry-pi-and-django-channels-8d5cddb36226#.dgg0nosw2
         
 
-3. Bootstrap
-        - the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.
+3. Bootstrap and Google map API
+        - Bootstrap the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.
         - makes your website look nice.
+        - Google map API: the way to integrate Google map on your website with tons of functionality.
+        
+        References: 
         http://getbootstrap.com/
+        https://bootstrapious.com/p/google-maps-and-bootstrap-tutorial
 
 
 4. HighCharts
@@ -386,3 +390,112 @@ Navigate to Getting started, and download the Bootstrap repository. Simply modif
 
 alternatively, we can design simple interface that composes a map with multiple markers that represent current active sensors. In this documentation, we are going to have multiple clickable markers on a map. When a marker is clicked, the sensor's reading will be displayed in a dynamic gauge.
 
+#### Google API setup
+The first step is to get Google map API key: just follow the simple steps here: https://developers.google.com/maps/documentation/javascript/get-api-key
+
+#### New html file
+Next, let's create a clean new html file `map.html` with the following:
+```html
+<html>
+    <head>
+{% load staticfiles %}
+        <title>IoT Demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+        <link href="{% static 'sensorReading/sensor.css' %}" rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+{% load staticfiles %}
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <div class="row">
+          <div class="col-xs-10 col-sm-6 col-md-7 col-md-offset-1" style=" margin-top: 1cm;">
+              <h2>An IoT project demo</h2>
+              <p> The map below shows current active sensors, click on a marker to find out more ! </p>
+          </div>
+        </div>
+        <div id="map"></div>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCR_Dl2qOpJpF89ZYWKdX5wDVEruNEvyRA"></script>
+        <script src='{% static "sensorReading/sensor.js" %}'></script>
+        <script type="text/javascript" src='{% static "sensorReading/reconnecting-websocket.min.js" %}'></script>
+    </body>
+</html>
+```
+You can notice a bunch of script to point to Google APIs. Aside from that we have:
+`sensor.css` for the local css stylesheet. `<div id="map"></div>` to show the map.
+
+#### Updating Javascript file to server Google map
+Javascript files also need to be modified to initiate Google map:
+```js
+var marker_id;
+$(function connectivity() {
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/map")
+
+    chatsock.onopen = function() {
+      console.log("Connected 1");
+      $('#sensor').text("Connected 2");
+      chatsock.send("Connected 3");
+    };
+
+    chatsock.onmessage = function(message) {
+        console.log("Received Socket message!");  // just for debugging
+        console.log(message);                     // just for debugging
+      $('#sensor').text(message.data);
+    };
+});
+
+$(function () {
+    function initMap() {
+        var location = new google.maps.LatLng(24.716752, 46.644054);
+
+        var mapCanvas = document.getElementById('map');
+        var mapOptions = {
+            center: location,
+            zoom: 4,
+            panControl: false,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+
+	var markers = [
+	[24.726520, 46.644067],
+        [20.499219, 41.469994],
+        [28.443315, 36.291231]
+    	];
+
+	marker_id = [1,2,3];
+
+	// Loop through our array of markers & place each one on the map
+    	for( i = 0; i < markers.length; i++ )
+	{
+        	var position = new google.maps.LatLng(markers[i][0], markers[i][1]);
+                marker = new google.maps.Marker({
+		id: i,
+          	position: position,
+            	map: map,
+	        });
+	        var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+            	maxWidth: 400
+        	});
+	   (function(z)
+	   {
+             google.maps.event.addListener(marker, 'click', function () {
+                marker_id = z;
+             });
+	   })(i);
+     	 }
+
+	var styles = [{"elementType":"labels","stylers":[{"visibility":"off"},{"color":"#f49f53"}]},{"featureType":"landscape","stylers":[{"color":"#f9ddc5"},{"lightness":-7}]},{"featureType":"road","stylers":[{"color":"#813033"},{"lightness":43}]},{"featureType":"poi.business","stylers":[{"color":"#645c20"},{"lightness":38}]},{"featureType":"water","stylers":[{"color":"#1994bf"},{"saturation":-69},{"gamma":0.99},{"lightness":43}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"#f19f53"},{"weight":1.3},{"visibility":"on"},{"lightness":16}]},{"featureType":"poi.business"},{"featureType":"poi.park","stylers":[{"color":"#645c20"},{"lightness":39}]},{"featureType":"poi.school","stylers":[{"color":"#a95521"},{"lightness":35}]},{},{"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"color":"#813033"},{"lightness":38},{"visibility":"off"}]},{},{},{},{},{},{},{},{},{},{},{},{"elementType":"labels"},{"featureType":"poi.sports_complex","stylers":[{"color":"#9e5916"},{"lightness":32}]},{},{"featureType":"poi.government","stylers":[{"color":"#9e5916"},{"lightness":46}]},{"featureType":"transit.station","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","stylers":[{"color":"#813033"},{"lightness":22}]},{"featureType":"transit","stylers":[{"lightness":38}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#f19f53"},{"lightness":-10}]},{},{},{}]
+ 	map.set('styles', styles);
+    }
+    google.maps.event.addDomListener(window, 'load', initMap);
+});
+```
+This will render Google map with three dumy markers. One small note here is that we added a map listner event for each marker. Now, it's only set a global marker_id for each marker. In the next step we will add a functionality for markers such that when someone click on a marker the data that comes from this marker "sensor" will be displayed dynamically on a gauge.
+
+#### Adding Gauges for better visualization.
