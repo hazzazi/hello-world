@@ -35,14 +35,16 @@ Can I use the light weight server that comes with django and access it remotely 
         - https://medium.com/@johngrant/raspberry-pi-and-django-channels-8d5cddb36226#.dgg0nosw2
         
 
-3. Bootstrap and Google map API
+3. Bootstrap, Google map API and gauges.
         - Bootstrap the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.
         - makes your website look nice.
         - Google map API: the way to integrate Google map on your website with tons of functionality.
+	- Gauge: to show current sensors reading.
         
         References: 
         http://getbootstrap.com/
         https://bootstrapious.com/p/google-maps-and-bootstrap-tutorial
+	http://justgage.com/
 
 
 4. HighCharts
@@ -478,10 +480,6 @@ $(function () {
           	position: position,
             	map: map,
 	        });
-	        var infowindow = new google.maps.InfoWindow({
-                content: contentString,
-            	maxWidth: 400
-        	});
 	   (function(z)
 	   {
              google.maps.event.addListener(marker, 'click', function () {
@@ -499,3 +497,119 @@ $(function () {
 This will render Google map with three dumy markers. One small note here is that we added a map listner event for each marker. Now, it's only set a global marker_id for each marker. In the next step we will add a functionality for markers such that when someone click on a marker the data that comes from this marker "sensor" will be displayed dynamically on a gauge.
 
 #### Adding Gauges for better visualization.
+Just as explained simply in: http://justgage.com/:
+
+In `map.html` add the following scripts link:
+```html
+        <script src='{% static "sensorReading/justgage.js" %}'></script>
+        <script src='{% static "sensorReading/raphael-2.1.4.min.js" %}'></script>
+```
+and include these files in the `static/sensorReading` directory.
+Also in the same html file, add a reference to gauge's id:
+```html
+          <div class="col-xs-5 col-md-3" style=" margin-top: .4cm;">
+              <div id="gauge1" style="width:180px; height:120px; float: left;"></div>
+              <div id="gauge2" style="width:180px; height:120px; float: left;"></div>
+          </div>
+```
+and Finally, modify your `sensor.js file` to be linked with this html file, so the final changes will look like:
+```js
+var marker_id;
+var g1, g2;
+    g1 = new JustGage({
+      id: "gauge1",
+      value: [],
+      min: 0,
+      max: 600,
+      title: "Tempreture",
+    });
+
+    g2 = new JustGage({
+      id: "gauge2",
+      value: [],
+      min: 0,
+      max: 600,
+      title: "Wind speed",
+    });
+
+$(function connectivity() {
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/map")
+
+    chatsock.onopen = function() {
+      console.log("Connected 1");
+      $('#sensor').text("Connected 2");
+      chatsock.send("Connected 3");
+    };
+
+    chatsock.onmessage = function(message) {
+      $('#sensor').text(message.data);
+      var data = JSON.parse(message.data);
+      if (data.id == "sensor1" && marker_id==0){
+          g1.refresh(data.tempreture);
+          g2.refresh(data.wind);  
+      }
+      else if (data.id == "sensor2" && marker_id==1) {
+          g1.refresh(data.tempreture);
+          g2.refresh(data.wind);
+      }
+      else if (data.id == "sensor3" && marker_id==2) {
+          g1.refresh(data.tempreture);
+          g2.refresh(data.wind);
+      }
+      else {
+	   console.log("No data from marker " + marker_id) 
+      }
+    };
+});
+
+$(function () {
+
+    function initMap() {
+        var location = new google.maps.LatLng(24.716752, 46.644054);
+
+        var mapCanvas = document.getElementById('map');
+        var mapOptions = {
+            center: location,
+            zoom: 4,
+            panControl: false,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+
+	var markers = [
+	[24.726520, 46.644067],
+        [20.499219, 41.469994],
+        [28.443315, 36.291231]
+    	];
+
+	marker_id = [1,2,3];
+
+	// Loop through our array of markers & place each one on the map
+    	for( i = 0; i < markers.length; i++ )
+	{
+        	var position = new google.maps.LatLng(markers[i][0], markers[i][1]);
+                marker = new google.maps.Marker({
+		id: i,
+          	position: position,
+            	map: map,
+	        });
+	   (function(z)
+	   {
+             google.maps.event.addListener(marker, 'click', function () {
+               console.log("z = " + z)
+		marker_id = z;
+             });
+	   })(i);
+     	 }
+
+	var styles = [{"elementType":"labels","stylers":[{"visibility":"off"},{"color":"#f49f53"}]},{"featureType":"landscape","stylers":[{"color":"#f9ddc5"},{"lightness":-7}]},{"featureType":"road","stylers":[{"color":"#813033"},{"lightness":43}]},{"featureType":"poi.business","stylers":[{"color":"#645c20"},{"lightness":38}]},{"featureType":"water","stylers":[{"color":"#1994bf"},{"saturation":-69},{"gamma":0.99},{"lightness":43}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"#f19f53"},{"weight":1.3},{"visibility":"on"},{"lightness":16}]},{"featureType":"poi.business"},{"featureType":"poi.park","stylers":[{"color":"#645c20"},{"lightness":39}]},{"featureType":"poi.school","stylers":[{"color":"#a95521"},{"lightness":35}]},{},{"featureType":"poi.medical","elementType":"geometry.fill","stylers":[{"color":"#813033"},{"lightness":38},{"visibility":"off"}]},{},{},{},{},{},{},{},{},{},{},{},{"elementType":"labels"},{"featureType":"poi.sports_complex","stylers":[{"color":"#9e5916"},{"lightness":32}]},{},{"featureType":"poi.government","stylers":[{"color":"#9e5916"},{"lightness":46}]},{"featureType":"transit.station","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","stylers":[{"color":"#813033"},{"lightness":22}]},{"featureType":"transit","stylers":[{"lightness":38}]},{"featureType":"road.local","elementType":"geometry.stroke","stylers":[{"color":"#f19f53"},{"lightness":-10}]},{},{},{}]
+ 	map.set('styles', styles);
+    }
+    google.maps.event.addDomListener(window, 'load', initMap);
+});
+```
+Notice that we initiate new gauge objects at the beginning with empty value, once a marker is clicked the value displayed at the gauge will be updated with the data received from the client through WebSocket. 
+
+
