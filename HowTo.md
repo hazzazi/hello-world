@@ -321,6 +321,7 @@ After having the channel layer ready, the next step is to configure some files t
 ```py
 STATICFILES_DIRS = ( os.path.join(BASE_DIR, ‘static’),)
 ```
+
 3. In `/myproject/static/sensorReading`, create new Javascript, call it for example: `sensor.js`. This contains the code that handle WebSockets dynamically in the backend.
 ```js
 $(function() {
