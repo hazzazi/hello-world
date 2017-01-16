@@ -611,5 +611,5 @@ $(function () {
 });
 ```
 Notice that we initiate new gauge objects at the beginning with empty value, once a marker is clicked the value displayed at the gauge will be updated with the data received from the client through WebSocket. 
-![alt text](IoT_demo.png)
+![alt text](photos/IoT_demo.png)
 
