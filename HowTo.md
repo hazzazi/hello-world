@@ -342,10 +342,10 @@ $(function() {
 
 });
 ```
-Here, we are initiating a new WebSocket object, with a specified address. This will offer us an access to number of object's events. We used onopen: which defines what happened when socket connection is established. and onmessage: This event occurs when client receives data from server. Both function receives data from client "message". To read it check: message.data.
-Notice that we are sending received data with `myproject` as an id.
+Here, we are initiating a new WebSocket object, with specific address. This offers us an access to number of object's events. We used, onopen: which defines what happened when socket connection is established. and onmessage: This event occurs when client receives data from server. Both function receives data from client "message". To read it check: message.data.
+Notice that we are sending and received data with `myproject` as an id.
 
-4. To have received data displayed, we need to modify our `index.html` file:
+4. To have the received data displayed, we need to modify our `index.html` file:
 ```html
 <!DOCTYPE html>
 <html lang="en">
