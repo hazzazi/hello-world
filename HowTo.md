@@ -434,15 +434,15 @@ Javascript files also need to be modified to initiate Google map:
 var marker_id;
 $(function connectivity() {
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/map")
+    var sensorSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/map")
 
-    chatsock.onopen = function() {
+    sensorSocket.onopen = function() {
       console.log("Connected 1");
       $('#sensor').text("Connected 2");
-      chatsock.send("Connected 3");
+      sensorSocket.send("Connected 3");
     };
 
-    chatsock.onmessage = function(message) {
+    sensorSocket.onmessage = function(message) {
         console.log("Received Socket message!");  // just for debugging
         console.log(message);                     // just for debugging
       $('#sensor').text(message.data);
@@ -534,15 +534,15 @@ var g1, g2;
 
 $(function connectivity() {
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/map")
+    var sensorSocket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/map")
 
-    chatsock.onopen = function() {
+    sensorSocket.onopen = function() {
       console.log("Connected 1");
       $('#sensor').text("Connected 2");
-      chatsock.send("Connected 3");
+      sensorSocket.send("Connected 3");
     };
 
-    chatsock.onmessage = function(message) {
+    sensorSocket.onmessage = function(message) {
       $('#sensor').text(message.data);
       var data = JSON.parse(message.data);
       if (data.id == "sensor1" && marker_id==0){
