@@ -49,6 +49,11 @@ Can I use the light weight server that comes with django and access it remotely 
 ###(b) Client side.
 ###(c) connections.
 
+### Things to add:
+        - Django admin.
+        - Django and pandas.
+        
+
 ##Big Picture:
 This article tries to explain one way to build a simple wireless sensor network. At the end of this tutorial, you should be able to send data from multiple sensors to a server, then show these acquired data in a nice dashboard displayed in a public web page.
 
@@ -374,3 +379,10 @@ Data is received by stating the id: `myproject`, which we set in our sensor.js f
   <div id="sensor">SensorReading Demo</div> 
 ```
 Now, if your client is up and it's sending data (which we haven't explained yet), you should see the data stream if you open the browser to http://127.0.0.1:8000/.
+
+### (3): Bootstrap and Google map API
+The basic functionality of the project is working now. However, things looks a bit boring. Yo have a nice interface, and save time, we will use Bootstap. 
+Navigate to Getting started, and download the Bootstrap repository. Simply modify the html files to meet your requirements and use as your `index.html` file.
+
+alternatively, we can design simple interface that composes a map with multiple markers that represent current active sensors. In this documentation, we are going to have multiple clickable markers on a map. When a marker is clicked, the sensor's reading will be displayed in a dynamic gauge.
+
