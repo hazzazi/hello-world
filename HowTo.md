@@ -45,6 +45,7 @@ Can I use the light weight server that comes with django and access it remotely 
         http://getbootstrap.com/
         https://bootstrapious.com/p/google-maps-and-bootstrap-tutorial
 	http://justgage.com/
+	http://papermashup.com/awesome-dashboard-gauges-with-javascript/
 
 
 4. HighCharts
