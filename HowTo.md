@@ -233,10 +233,10 @@ if you now browse to `http://127.0.0.1:8000`, you should get same message as bef
 Django is based on the classic concept of Http request/reponse. Our application here requires real-time server that can handle data streamed from various sensors. To meet this requirement, one can use AJAX or other technologies. Channels is based on Websocket; which is a communicaion protocol, providing full-duplex communication channels over a single TCP connection. It suits well for real-time applications allowing for messages to be passed back and forth while keeping the connection open.
 
 Without channels, django handles request/response as illustrated below:
-![alt text](/path/img.jpg)
+![alt text](/photos/django_channels.png)
 
 When introducing channels, the architecture looks as:
-![alt text](/path/img.jpg)
+![alt text](/photos/django_http.png)
 
 proFor more information, please refer to the references.
 
