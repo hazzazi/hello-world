@@ -54,6 +54,7 @@ Can I use the light weight server that comes with django and access it remotely 
 
 
 ###(b) Client side.
+Here we will demonestrate how to send sensors data using two common platforms: Raspberry PI and Arduino.
 
 ### Things to add:
         - Django admin.
@@ -65,7 +66,7 @@ This tutorial tries to explain one way to build a simple wireless sensor network
 
 The sensor (client) sends the data to the server using Websocket protocol. The server uses Django channels; an extension to Django framework which adds a new layer to support Websocket handling. After receiving the data at the server side, Django and some Javascript packages will take care of web development part.
 
-## Implementation:
+## (a) Server Side Implementation:
 ### (1): Django
 #### Basic Django setup:
 First, since Django is based on Python, make sure that Python is installed in your server.
@@ -612,4 +613,30 @@ $(function () {
 ```
 Notice that we initiate new gauge objects at the beginning with empty value, once a marker is clicked the value displayed at the gauge will be updated with the data received from the client through WebSocket. 
 ![alt text](photos/IoT_demo.png)
+
+
+
+## (b) Client Side Implementation:
+### (1): Raspberry PI:
+The only thing you need to setup your client to send basic data is to start by installing WebSocket client package for python. I used this library: `https://github.com/websocket-client/websocket-client`. Simply install it by typing:
+```
+$ pip install websocket-client
+```
+then try the following simple code:
+```py
+from websocket import create_connection
+import numpy as np
+import json
+
+ws = create_connection("ws://put your server address here")
+
+while True:
+    RandomNumber = np.random.randint(1, 100)
+    ws.send(json.dumps({
+    "RandomNumber": RandomNumber} , sort_keys=True, indent=4, separators=(',', ': ')))
+    time.sleep(2)
+```
+This code simply create a websocket connection, then repeatedly sends random data with JSON format. Check the console on the server side to make sure the successfulness of the data delivery.
+
+### (2): Arduino:
 
