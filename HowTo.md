@@ -54,7 +54,6 @@ Can I use the light weight server that comes with django and access it remotely 
 
 
 ###(b) Client side.
-###(c) connections.
 
 ### Things to add:
         - Django admin.
@@ -62,7 +61,7 @@ Can I use the light weight server that comes with django and access it remotely 
         
 
 ##Big Picture:
-This article tries to explain one way to build a simple wireless sensor network. At the end of this tutorial, you should be able to send data from multiple sensors to a server, then show these acquired data in a nice dashboard displayed in a public web page.
+This tutorial tries to explain one way to build a simple wireless sensor network. At the end of this tutorial, you should be able to send data from multiple sensors to a server, then show these acquired data in a nice dashboard displayed in a public web page.
 
 The sensor (client) sends the data to the server using Websocket protocol. The server uses Django channels; an extension to Django framework which adds a new layer to support Websocket handling. After receiving the data at the server side, Django and some Javascript packages will take care of web development part.
 
@@ -388,7 +387,7 @@ Data is received by stating the id: `myproject`, which we set in our sensor.js f
 Now, if your client is up and it's sending data (which we haven't explained yet), you should see the data stream if you open the browser to http://127.0.0.1:8000/.
 
 ### (3): Bootstrap and Google map API
-The basic functionality of the project is working now. However, things looks a bit boring. Yo have a nice interface, and save time, we will use Bootstap. 
+The basic functionality of the project is working now. However, things looks a bit boring. To have a nice interface, and save time, we will use Bootstap. 
 Navigate to Getting started, and download the Bootstrap repository. Simply modify the html files to meet your requirements and use as your `index.html` file.
 
 alternatively, we can design simple interface that composes a map with multiple markers that represent current active sensors. In this documentation, we are going to have multiple clickable markers on a map. When a marker is clicked, the sensor's reading will be displayed in a dynamic gauge.
@@ -495,7 +494,7 @@ $(function () {
     google.maps.event.addDomListener(window, 'load', initMap);
 });
 ```
-This will render Google map with three dumy markers. One small note here is that we added a map listner event for each marker. Now, it's only set a global marker_id for each marker. In the next step we will add a functionality for markers such that when someone click on a marker the data that comes from this marker "sensor" will be displayed dynamically on a gauge.
+This will render Google map with three dumy markers. One small note here is that we added a map listner event for each marker. Now, it's only set a global marker_id for each marker. In the next step we will add a functionality for markers such that when someone click on a marker, the data that comes from this marker "sensor" will be displayed dynamically on a gauge.
 
 #### Adding Gauges for better visualization.
 Just as explained simply in: http://justgage.com/:
